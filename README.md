@@ -59,49 +59,68 @@ The hospital's network infrastructure is designed to support critical medical op
 
 ---
 
-## IP Addressing & DHCP
-- **Subnet Schema**: /24 subnet per VLAN
-- **DHCP Configuration**:
-  - Address pools dynamically assigned per VLAN
-  - Reservations for critical medical devices
-  - Lease time: 8 hours for staff devices, 2 hours for guest network
+## IP Addressing Architecture
 
-- **Key IP Ranges**:
-  - VLAN 10: 192.168.10.1-254
-  - VLAN 21: 192.168.21.1-254 
-  - VLAN 32: 192.168.32.1-254
+### Subnet Design Strategy
+The network utilizes **192.168.1.0/22** (192.168.1.1 - 192.168.3.198) providing **1,024 addresses** with:
+- Efficient VLAN-based subnetting
+- Scalable address reservation (30% of total space reserved)
+- Hierarchical allocation for easy expansion
 
----
-
-## Security Implementation
-1. **Access Control**:
-   - Port security on all access switches
-   - 802.1X authentication for network devices
-
-2. **Traffic Management**:
-   - ACLs for inter-VLAN communication
-   - QoS prioritization for medical traffic
-
-3. **Wireless Security**:
-   - Separate SSIDs for staff/patients/guests
-   - Captive portal for guest access
+### VLAN IP Allocation Table
+| VLAN ID | Purpose                  | Network Address   | Subnet Mask | Usable IP Range            | Hosts | Broadcast     |
+|---------|--------------------------|-------------------|-------------|----------------------------|-------|---------------|
+| 10      | Reception & Waiting      | 192.168.1.0       | /24         | 192.168.1.1-254            | 254   | 192.168.1.255 |
+| 11      | Consultation Rooms       | 192.168.2.128     | /26         | 192.168.2.129-190          | 64    | 192.168.2.191 |
+| 12      | Building A Administration| 192.168.3.96      | /28         | 192.168.3.97-110           | 16    | 192.168.3.111 |
+| 20      | Specialist Services      | 192.168.2.192     | /26         | 192.168.2.193-254          | 64    | 192.168.2.255 |
+| 21      | Laboratories             | 192.168.3.64      | /27         | 192.168.3.65-94            | 32    | 192.168.3.95  |
+| 23      | Pharmacy                 | 192.168.3.128     | /28         | 192.168.3.129-142          | 16    | 192.168.3.143 |
+| 30      | Finance                  | 192.168.3.144     | /28         | 192.168.3.145-158          | 16    | 192.168.3.159 |
+| 31      | HR Department            | 192.168.3.176     | /29         | 192.168.3.177-182          | 8     | 192.168.3.183 |
+| 32      | Executive Offices        | 192.168.3.160     | /28         | 192.168.3.161-174          | 16    | 192.168.3.175 |
+| 33      | Conference Rooms         | 192.168.3.0       | /26         | 192.168.3.1-62             | 64    | 192.168.3.63  |
+| 34      | Training Facilities      | 192.168.3.184     | /28         | 192.168.3.185-198          | 16    | 192.168.3.199 |
+| 35      | Café & Public Access     | 192.168.2.0       | /25         | 192.168.2.1-126            | 128   | 192.168.2.127 |
 
 ---
 
-## Network Diagram Note
-The actual Packet Tracer file (`Hospital.pkt`) contains:
-- Full physical topology layout
-- Detailed device configurations
-- Complete cable connections
-- Testing scenarios for critical pathways
+## Network Configuration
 
----
+### Building A - Layer 2 Switch Configurations
 
-## Conclusion
-This design provides a future-ready infrastructure that:
-✅ Ensures HIPAA-compliant data security  
-✅ Supports high-availability medical applications  
-✅ Enables seamless staff/patient mobility  
-✅ Allows modular expansion as needs evolve
+#### **Switch 1 (Reception & Waiting Area)**
+```cisco
+! Core Configuration
+vlan 10
+ name ReceptionAndWaiting
+!
+interface range FastEthernet0/2-24
+ switchport mode access
+ switchport access vlan 10
+!
+interface FastEthernet0/1
+ switchport mode trunk
+!
+do write
 
-**Last Updated**: [Insert Date]
+! VLAN Configuration
+vlan 11
+ name Consultation
+vlan 12
+ name AdminBuildingA
+
+! Port Assignments
+interface range FastEthernet0/2-16
+ switchport mode access
+ switchport access vlan 11
+
+interface range FastEthernet0/17-24
+ switchport mode access
+ switchport access vlan 12
+
+! Trunk Configuration
+interface FastEthernet0/1
+ switchport mode trunk
+!
+do write
