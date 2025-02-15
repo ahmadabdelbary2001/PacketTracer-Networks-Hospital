@@ -124,3 +124,145 @@ interface FastEthernet0/1
  switchport mode trunk
 !
 do write
+
+## Building B - Layer 3 Switch Configuration
+
+### Core Switch Configuration (Multilayer Switch 0)
+```cisco
+! VLAN Definitions
+vlan 20
+ name SpecialistServices
+vlan 21
+ name Laboratories
+vlan 22
+ name Pharmacy
+vlan 23
+ name AdminisBuildingB
+
+! Trunk Port Configuration
+interface range FastEthernet0/1-3
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+do write
+
+vlan 20
+ name SpecialistServices
+
+interface range FastEthernet0/2-24
+ switchport mode access
+ switchport access vlan 20
+
+interface FastEthernet0/1
+ switchport mode trunk
+!
+do write
+
+vlan 21
+ name Laboratories
+
+interface range FastEthernet0/2-24
+ switchport mode access
+ switchport access vlan 21
+
+interface FastEthernet0/1
+ switchport mode trunk
+!
+do write
+
+! Dual VLAN Configuration
+vlan 22
+ name Pharmacy
+vlan 23
+ name AdminisBuildingB
+
+! Port Assignments
+interface range FastEthernet0/2-9
+ switchport mode access
+ switchport access vlan 22
+
+interface range FastEthernet0/10-24
+ switchport mode access
+ switchport access vlan 23
+
+! Trunk Setup
+interface FastEthernet0/1
+ switchport mode trunk
+!
+do write
+
+
+## Building C - Layer 3 Switch Configuration
+
+### Core Switch Configuration (Multilayer Switch 2)
+```cisco
+! VLAN Definitions for Building C
+vlan 30
+ name Finance
+vlan 31
+ name HR
+vlan 32
+ name DirectorAndAdmins
+vlan 33
+ name Conference
+vlan 34
+ name Training
+vlan 35
+ name Cafe
+
+! Trunk Port Configuration
+interface range FastEthernet0/1-4
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+do write
+
+vlan 30
+ name Finance
+vlan 31
+ name HR
+
+interface range FastEthernet0/3-7
+ switchport mode access
+ switchport access vlan 30
+
+interface range FastEthernet0/9-12
+ switchport mode access
+ switchport access vlan 31
+
+interface FastEthernet0/1
+ switchport mode trunk
+!
+do write
+
+vlan 33
+ name Conference
+
+interface range FastEthernet0/2-24
+ switchport mode access
+ switchport access vlan 33
+
+interface FastEthernet0/1
+ switchport mode trunk
+!
+do write
+
+! Dual VLAN Configuration
+vlan 34
+ name Training
+vlan 35
+ name Cafe
+
+interface range FastEthernet0/2-17
+ switchport mode access
+ switchport access vlan 34
+
+interface range FastEthernet0/18-24
+ switchport mode access
+ switchport access vlan 35
+
+interface FastEthernet0/1
+ switchport mode trunk
+!
+do write
+
