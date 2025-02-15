@@ -358,14 +358,12 @@ service dhcp
 
 ### Sample Configuration for VLAN 10
 ```cisco
-ip dhcp excluded-address 192.168.1.1 192.168.1.50  ! Reserve static IPs
-!
 ip dhcp pool ReceptionAndWaiting-Pool
  network 192.168.1.0 255.255.255.0
  default-router 192.168.1.1 
  dns-server 192.168.1.1
-!
 ```
+---
 
 ## Wireless Network Configuration
 For network security, **WPA-PSK (Wi-Fi Protected Access - Pre-Shared Key)** was chosen as the authentication method, which uses **AES (Advanced Encryption Standard)** for encrypting the data. This approach ensures that users must enter a shared password to connect to the network.
