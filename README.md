@@ -330,3 +330,75 @@ interface g0/0.11
 do write
 ```
 
+## DHCP Configuration for Automated IP Management
+
+### Global DHCP Activation
+```cisco
+service dhcp
+!
+```
+
+### VLAN-Specific DHCP Pools
+
+| VLAN ID | Pool Name               | Network            | Subnet Mask       | Default Gateway   | DNS Server       |
+|---------|-------------------------|--------------------|-------------------|-------------------|------------------|
+| 10      | ReceptionAndWaiting-Pool| 192.168.1.0        | 255.255.255.0     | 192.168.1.1       | 192.168.1.1      |
+| 11      | Consultation-Pool       | 192.168.2.128      | 255.255.255.192   | 192.168.2.129     | 192.168.2.129    |
+| 12      | AdminBuildingA-Pool     | 192.168.3.96       | 255.255.255.240   | 192.168.3.97      | 192.168.3.97     |
+| 20      | SpecialistsServices-Pool| 192.168.2.192      | 255.255.255.192   | 192.168.2.193     | 192.168.2.193    |
+| 21      | Laboratories-Pool       | 192.168.3.64       | 255.255.255.224   | 192.168.3.65      | 192.168.3.65     |
+| 22      | Pharmacy-Pool           | 192.168.3.112      | 255.255.255.240   | 192.168.3.113     | 192.168.3.113    |
+| 23      | AdminBuildingB-Pool     | 192.168.3.128      | 255.255.255.240   | 192.168.3.129     | 192.168.3.129    |
+| 30      | Finance-Pool            | 192.168.3.144      | 255.255.255.240   | 192.168.3.145     | 192.168.3.145    |
+| 31      | HR-Pool                 | 192.168.3.176      | 255.255.255.248   | 192.168.3.177     | 192.168.3.177    |
+| 32      | DirectorsAndAdmins-Pool | 192.168.3.160      | 255.255.255.240   | 192.168.3.161     | 192.168.3.161    |
+| 33      | Conference-Pool         | 192.168.3.0        | 255.255.255.192   | 192.168.3.1       | 192.168.3.1      |
+| 34      | Training-Pool           | 192.168.3.184      | 255.255.255.240   | 192.168.3.185     | 192.168.3.185    |
+| 35      | Cafe-Pool               | 192.168.2.0        | 255.255.255.128   | 192.168.2.1       | 192.168.2.1      |
+
+### Sample Configuration for VLAN 10
+```cisco
+ip dhcp excluded-address 192.168.1.1 192.168.1.50  ! Reserve static IPs
+!
+ip dhcp pool ReceptionAndWaiting-Pool
+ network 192.168.1.0 255.255.255.0
+ default-router 192.168.1.1 
+ dns-server 192.168.1.1
+!
+```
+
+## Wireless Network Configuration
+For network security, **WPA-PSK (Wi-Fi Protected Access - Pre-Shared Key)** was chosen as the authentication method, which uses **AES (Advanced Encryption Standard)** for encrypting the data. This approach ensures that users must enter a shared password to connect to the network.
+
+### Key Wireless Settings:
+- **SSID for Waiting Rooms**: `Hospital`  
+- **Authentication**: WPA-PSK  
+- **Encryption**: AES  
+- **Passphrase**: `++123456789++`  
+
+---
+
+## Testing Results
+
+### DHCP and VLAN Validation
+1. **PC1 (VLAN 10 - Reception/Waiting Area)**  
+   - Assigned IP: `192.168.1.2`  
+   - Subnet Mask: `255.255.255.0`  
+   - Default Gateway: `192.168.1.1`  
+   - DNS Server: `192.168.1.1`  
+
+2. **PC8 (VLAN 20 - Specialist Services)**  
+   - Assigned IP: `192.168.2.194`  
+   - Subnet Mask: `255.255.255.192`  
+   - Default Gateway: `192.168.2.193`  
+   - DNS Server: `192.168.2.193`  
+
+### Inter-VLAN Communication Test
+A successful ping from **PC8 (VLAN 20)** to **PC1 (VLAN 10)** confirmed proper routing:  
+```powershell
+C:\> ping 192.168.1.2
+
+Ping statistics for 192.168.1.2:
+    Packets: Sent = 4, Received = 3, Lost = 1 (25% loss)
+    Approximate round trip times:
+    Minimum = 0ms, Maximum = 2ms, Average = 1ms
