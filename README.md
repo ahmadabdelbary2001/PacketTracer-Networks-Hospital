@@ -126,19 +126,16 @@ interface FastEthernet0/1
 do write
 ```
 
-## Building B - Layer 3 Switch Configuration
+## Building A - Layer 3 Switch Configuration (Multilayer Switch 0)
 
-### Core Switch Configuration (Multilayer Switch 0)
 ```cisco
-! VLAN Definitions
-vlan 20
- name SpecialistServices
-vlan 21
- name Laboratories
-vlan 22
- name Pharmacy
-vlan 23
- name AdminisBuildingB
+! VLAN Definitions for Building A
+vlan 10
+ name ReceptionAndWaiting
+vlan 11
+ name Consultation
+vlan 12
+ name AdminBuildingA
 
 ! Trunk Port Configuration
 interface range FastEthernet0/1-3
@@ -146,7 +143,10 @@ interface range FastEthernet0/1-3
  switchport mode trunk
 !
 do write
+```
 
+## Building B - Layer 2 Switch Configurations
+```cisco
 vlan 20
  name SpecialistServices
 
@@ -193,31 +193,28 @@ interface FastEthernet0/1
 do write
 ```
 
-## Building C - Layer 3 Switch Configuration
-
-### Core Switch Configuration (Multilayer Switch 2)
+### Building B - Layer 3 Switch Configuration (Multilayer Switch)
 ```cisco
-! VLAN Definitions for Building C
-vlan 30
- name Finance
-vlan 31
- name HR
-vlan 32
- name DirectorAndAdmins
-vlan 33
- name Conference
-vlan 34
- name Training
-vlan 35
- name Cafe
+! VLAN Definitions
+vlan 20
+ name SpecialistServices
+vlan 21
+ name Laboratories
+vlan 22
+ name Pharmacy
+vlan 23
+ name AdminisBuildingB
 
 ! Trunk Port Configuration
-interface range FastEthernet0/1-4
+interface range FastEthernet0/1-3
  switchport trunk encapsulation dot1q
  switchport mode trunk
 !
 do write
+```
 
+## Building C - Layer 2 Switch Configurations
+```cisco
 vlan 30
  name Finance
 vlan 31
@@ -268,6 +265,29 @@ interface FastEthernet0/1
 do write
 ```
 
+## Building C - Layer 3 Switch Configuration (Multilayer Switch)
+```cisco
+! VLAN Definitions for Building C
+vlan 30
+ name Finance
+vlan 31
+ name HR
+vlan 32
+ name DirectorAndAdmins
+vlan 33
+ name Conference
+vlan 34
+ name Training
+vlan 35
+ name Cafe
+
+! Trunk Port Configuration
+interface range FastEthernet0/1-4
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+do write
+```
 
 ## Core Network Configuration
 
