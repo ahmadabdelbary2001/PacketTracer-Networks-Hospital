@@ -124,6 +124,7 @@ interface FastEthernet0/1
  switchport mode trunk
 !
 do write
+```
 
 ## Building B - Layer 3 Switch Configuration
 
@@ -190,7 +191,7 @@ interface FastEthernet0/1
  switchport mode trunk
 !
 do write
-
+```
 
 ## Building C - Layer 3 Switch Configuration
 
@@ -265,4 +266,67 @@ interface FastEthernet0/1
  switchport mode trunk
 !
 do write
+```
+
+
+## Core Network Configuration
+
+### Core Switch Configuration (Multilayer Switch)
+```cisco
+! VLAN Definitions for All Buildings
+vlan 10
+ name ReceptionAndWaiting
+vlan 11
+ name Consultation
+vlan 12
+ name AdminBuildingA
+vlan 20
+ name SpecialistServices
+vlan 21
+ name Laboratories
+vlan 22
+ name Pharmacy
+vlan 23
+ name AdminBuildingB
+vlan 30
+ name Finance
+vlan 31
+ name HR
+vlan 32
+ name DirectorAndAdmins
+vlan 33
+ name Conference
+vlan 34
+ name Training
+vlan 35
+ name Cafe
+
+! Trunk Port Configuration
+interface FastEthernet0/1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+do write
+```
+
+## Router Configuration (Cisco 2901)
+
+### Base Interface Activation
+```cisco
+interface GigabitEthernet0/0
+ no shutdown
+!
+
+interface g0/0.10
+ encapsulation dot1q 10
+ ip address 192.168.1.1 255.255.255.0
+!
+interface g0/0.11
+ encapsulation dot1q 11
+ ip address 192.168.2.129 255.255.255.192
+!
+... [Similar configuration for other sub-interfaces]
+!
+do write
+```
 
